@@ -112,8 +112,21 @@ namespace keepr.Controllers
     [Authorize]
     public string ShareKeep([FromBody]Share newKeep, int keepId)
     {
-      newKeep.authorId = HttpContext.User.Identity.Name;
+      newKeep.AuthorId = HttpContext.User.Identity.Name;
       return _db.ShareKeep(newKeep, keepId);
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize]
+    public string DeleteShare(int id)
+    {
+      var user = HttpContext.User.Identity.Name;
+      bool result = _db.DeleteKeep(id, user);
+      if (result)
+      {
+        return "Successfully Removed!";
+      }
+      return "An Error Occurred! Try Again!";
     }
   }
 }

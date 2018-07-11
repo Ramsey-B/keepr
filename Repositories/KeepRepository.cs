@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using Dapper;
 using keepr.Models;
@@ -29,23 +29,24 @@ namespace keepr.Repository
       {
         return null;
       }
-      return _db.QueryFirstOrDefault<Keep>(@"SELECT * FROM shares vk
-              INNER JOIN keeps k ON k.id = vk.keepId 
-              WHERE (k.id = @id)", new { id });
+      return _db.QueryFirstOrDefault<Keep>(@"SELECT * FROM keeps
+              WHERE (keeps.id = @id);", new { id });
     }
 
     public IEnumerable<Keep> GetByAuthorId(string id)
     {
-      return _db.Query<Keep>(@"SELECT * FROM shares vk
+      return _db.Query<Keep>(@"SELECT * FROM shares
               INNER JOIN keeps ON keeps.id = shares.keepId 
-              WHERE (keeps.authorId = @id)", new { id });
+              WHERE (keeps.authorId = @id);
+              ", new { id });
     }
 
     public IEnumerable<Keep> GetByVaultId(int id)
     {
-      return _db.Query<Keep>(@"SELECT * FROM shares vk
+      return _db.Query<Keep>(@"SELECT * FROM shares
               INNER JOIN keeps ON keeps.id = shares.keepId 
-              WHERE (keeps.vaultId = @id)", new { id });
+              WHERE (keeps.vaultId = @id);
+              ", new { id });
     }
 
     public Keep CreateKeep(Keep newKeep)
@@ -56,6 +57,11 @@ namespace keepr.Repository
                 SELECT LAST_INSERT_ID();
             ", newKeep);
       newKeep.Id = id;
+      Share newShare = new Share{};
+      newShare.AuthorId = newKeep.AuthorId;
+      newShare.VaultId = newKeep.VaultId;
+      newShare.KeepId = id;
+      ShareKeep(newShare, id);
       return newKeep;
     }
 
@@ -151,17 +157,37 @@ namespace keepr.Repository
                 UPDATE keeps SET
                     keeps = keeps + 1
                 WHERE id = @keepId;
-            ", keepId);
+            ", new {keepId});
       if (i > 0)
       {
         int id = _db.ExecuteScalar<int>(@"
                 INSERT INTO shares (keepId, authorId, vaultId)
-                VALUES (@keepId, @authorId, @vaultId);
+                VALUES (@KeepId, @AuthorId, @VaultId);
                 SELECT LAST_INSERT_ID();
             ", newKeep);
         return "Successfully Added!";
       }
       return "Failed To Add!";
+    }
+
+    public bool DeleteShare(string authorId, int keepId)
+    {
+      var num = _db.Execute(@"
+                UPDATE keeps SET
+                    keeps = keeps - 1
+                WHERE id = @keepId;
+            ", keepId);
+      if (num > 0)
+      {
+        var i = _db.Execute(@"
+      DELETE FROM tags
+      WHERE keepId = @keepId
+      AND authorId = @authorId
+      LIMIT 1;
+      ", new { keepId, authorId});
+        return i > 0;
+      }
+      return false;
     }
   }
 }

@@ -9,7 +9,7 @@ namespace keepr.Models
     public string AuthorId { get; set; }
     public int VaultId { get; set; }
     public int Views { get; set; } = 0;
-    public int Keeps { get; set; } = 0;
+    public int Keeps { get; set; } = 1;
     public bool Public { get; set; } = false;
   }
 }
