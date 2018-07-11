@@ -15,31 +15,44 @@ namespace keepr.Repository
 
     public IEnumerable<Keep> GetAll()
     {
-      return _db.Query<Keep>("SELECT * FROM keeps;");
+      return _db.Query<Keep>("SELECT * FROM keeps WHERE public = true;");
     }
 
-    public IEnumerable<Keep> GetById(string id, string value)
+    public Keep GetById(int id)
     {
-      if (value == "id")
-      {
-        var i = _db.Execute(@"
+      var i = _db.Execute(@"
                 UPDATE keeps SET
                   views = views + 1
                 WHERE id = @id;
             ", new { id });
-        if (i < 1)
-        {
-          return null;
-        }
+      if (i < 1)
+      {
+        return null;
       }
-      return _db.Query<Keep>("SELECT * FROM keeps WHERE " + value + " = @id", new { id });
+      return _db.QueryFirstOrDefault<Keep>(@"SELECT * FROM shares vk
+              INNER JOIN keeps k ON k.id = vk.keepId 
+              WHERE (k.id = @id)", new { id });
+    }
+
+    public IEnumerable<Keep> GetByAuthorId(string id)
+    {
+      return _db.Query<Keep>(@"SELECT * FROM shares vk
+              INNER JOIN keeps ON keeps.id = shares.keepId 
+              WHERE (keeps.authorId = @id)", new { id });
+    }
+
+    public IEnumerable<Keep> GetByVaultId(int id)
+    {
+      return _db.Query<Keep>(@"SELECT * FROM shares vk
+              INNER JOIN keeps ON keeps.id = shares.keepId 
+              WHERE (keeps.vaultId = @id)", new { id });
     }
 
     public Keep CreateKeep(Keep newKeep)
     {
       int id = _db.ExecuteScalar<int>(@"
-                INSERT INTO keeps (description, img, author, authorId, vaultId, views, public)
-                VALUES (@Description, @Img, @Author, @AuthorId, @VaultId, @Views, @Public);
+                INSERT INTO keeps (description, img, author, authorId, vaultId, views, public, keeps)
+                VALUES (@Description, @Img, @Author, @AuthorId, @VaultId, @Views, @Public, @Keeps);
                 SELECT LAST_INSERT_ID();
             ", newKeep);
       newKeep.Id = id;
@@ -128,9 +141,27 @@ namespace keepr.Repository
       INNER JOIN keeps ON keeps.id = tags.keepId 
       WHERE (tag = @tag)
       AND keeps.public = true;
-      ", new{tag});
+      ", new { tag });
       return check;
     }
 
+    public string ShareKeep(Share newKeep, int keepId)
+    {
+      var i = _db.Execute(@"
+                UPDATE keeps SET
+                    keeps = keeps + 1
+                WHERE id = @keepId;
+            ", keepId);
+      if (i > 0)
+      {
+        int id = _db.ExecuteScalar<int>(@"
+                INSERT INTO shares (keepId, authorId, vaultId)
+                VALUES (@keepId, @authorId, @vaultId);
+                SELECT LAST_INSERT_ID();
+            ", newKeep);
+        return "Successfully Added!";
+      }
+      return "Failed To Add!";
+    }
   }
 }

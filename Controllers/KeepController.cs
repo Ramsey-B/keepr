@@ -22,23 +22,23 @@ namespace keepr.Controllers
     }
 
     [HttpGet("{id}")]
-    public IEnumerable<Keep> GetById(string id)
+    public Keep GetById(int id)
     {
-      return _db.GetById(id, "id");
+      return _db.GetById(id);
     }
 
     [HttpGet("vault/{id}")]
     [Authorize]
-    public IEnumerable<Keep> GetByVaultId(string id)
+    public IEnumerable<Keep> GetByVaultId(int id)
     {
-      return _db.GetById(id, "vaultId");
+      return _db.GetByVaultId(id);
     }
 
     [HttpGet("user/{id}")]
     [Authorize]
     public IEnumerable<Keep> GetByAuthorId(string id)
     {
-      return _db.GetById(id, "authorId");
+      return _db.GetByAuthorId(id);
     }
 
     [HttpPost("{id}")]
@@ -50,18 +50,6 @@ namespace keepr.Controllers
       if (ModelState.IsValid)
       {
         return _db.CreateKeep(newKeep);
-      }
-      return null;
-    }
-
-    [HttpPost("add/{id}")]
-    [Authorize]
-    public Keep AddKeep(int id, [FromBody]Keep addKeep)
-    {
-      if(ModelState.IsValid)
-      {
-        addKeep.VaultId = id;
-        return _db.CreateKeep(addKeep);
       }
       return null;
     }
@@ -120,5 +108,12 @@ namespace keepr.Controllers
       return _db.GetByTag(name);
     }
 
+    [HttpPost("add/{keepId}")]
+    [Authorize]
+    public string ShareKeep([FromBody]Share newKeep, int keepId)
+    {
+      newKeep.authorId = HttpContext.User.Identity.Name;
+      return _db.ShareKeep(newKeep, keepId);
+    }
   }
 }
