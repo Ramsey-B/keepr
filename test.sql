@@ -27,6 +27,7 @@
 --   authorId VARCHAR(255) NOT NULL,
 --   vaultId int NOT NULL,
 --   views int NOT NULL,
+--   keeps int NOT NULL,
 --   public BOOLEAN NOT NULL,
 --   PRIMARY KEY (id),
 
@@ -37,7 +38,7 @@
 --   FOREIGN KEY (vaultId)
 --     REFERENCES vaults(id)
 --     ON DELETE CASCADE
--- )
+-- );
 
 -- CREATE TABLE tags (
 --   id int NOT NULL AUTO_INCREMENT,

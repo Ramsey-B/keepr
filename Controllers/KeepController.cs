@@ -54,6 +54,18 @@ namespace keepr.Controllers
       return null;
     }
 
+    [HttpPost("add/{id}")]
+    [Authorize]
+    public Keep AddKeep(int id, [FromBody]Keep addKeep)
+    {
+      if(ModelState.IsValid)
+      {
+        addKeep.VaultId = id;
+        return _db.CreateKeep(addKeep);
+      }
+      return null;
+    }
+
     [HttpPut("{id}")]
     [Authorize]
     public Keep EditKeep(int id, [FromBody]Keep editKeep)
