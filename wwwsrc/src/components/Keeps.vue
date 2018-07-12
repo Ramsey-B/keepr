@@ -66,7 +66,7 @@
     },
     computed: {
       keeps() {
-        return this.$store.state.userKeeps
+        return this.$store.state.keepsModule.userKeeps
       }
     },
     methods: {

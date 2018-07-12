@@ -30,7 +30,9 @@
     </div>
     <div class="vaults">
       <div v-for="vault in vaults">
-        <h2>{{vault.title}}</h2>
+        <a @click="selectVault(vault)">
+          <h2>{{vault.title}}</h2>
+        </a>
       </div>
     </div>
   </div>
@@ -51,12 +53,15 @@
     },
     computed: {
       vaults() {
-        return this.$store.state.vaults
+        return this.$store.state.vaultModule.vaults
       }
     },
     methods: {
       createVault() {
         this.$store.dispatch("createVault", this.newVault)
+      },
+      selectVault(vault) {
+        this.$store.dispatch("selectVault", vault)
       }
     }
   }
