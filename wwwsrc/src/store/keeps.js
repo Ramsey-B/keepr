@@ -14,6 +14,7 @@ export default {
   state: {
     keeps: [],
     userKeeps: [],
+    tags: []
   },
   mutations: {
     setKeeps(state, keeps) {
@@ -22,6 +23,12 @@ export default {
     setUserKeeps(state, keeps) {
       state.userKeeps = keeps
     },
+    setNewKeep(state, keep) {
+      state.userKeeps.unshift(keep)
+    },
+    setTags(state, tags) {
+      state.tags = tags
+    }
   },
   actions: {
     getKeeps({ commit, dispatch }) {
@@ -51,5 +58,16 @@ export default {
           console.log(err)
         })
     },
+    createKeep({ commit, dispatch, rootState}, keep) {
+      keep.author = rootState.userModule.user.username
+      server.post('/keep/' +keep.vaultId, keep)
+        .then(res => {
+          commit("setNewKeep", res.data)
+          server.post('/keep/tag/' +res.data.id, keep.tags)
+            .then(res => {
+              commit("setTags", res.data)
+            })
+        })
+    }
   }
 }

@@ -21,16 +21,23 @@
                 <input class="input" type="text" name="description" placeholder="Description" id="description" v-model="newKeep.description">
                 <div class="mt-3">
                   <div class="d-flex flex-row">
-                    <span v-for="(tag, i) in tags" class="ml-3">{{tag.tag}} <a @click="removeTag(i)" class="remove-tag">X</a></span>
+                    <span v-for="(tag, i) in tags" class="ml-3">{{tag.tagName}}
+                      <a @click="removeTag(i)" class="remove-tag">X</a>
+                    </span>
                   </div>
                   <form v-on:submit.prevent="addTag">
-                    <input type="text" placeholder="Add Tag" v-model="tag.tag">
+                    <input type="text" placeholder="Add Tag" v-model="tag.tagName">
                     <button type="submit" class="btn btn-primary btn-primary">Add Tag</button>
                   </form>
                 </div>
               </form>
+              <p id="error"></p>
             </div>
             <div class="modal-footer">
+              <select v-model="vault">
+                <option disabled value=''>Select a Vault</option>
+                <option v-for="vault in vaults" :key="vault.id" :value="vault">{{vault.title}}</option>
+              </select>
               <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
               <button class="btn btn-primary btn-primary" @click="createKeep" data-dismiss="modal">Submit</button>
             </div>
@@ -56,33 +63,47 @@
       return {
         tags: [],
         tag: {
-          tag: ''
+          tagName: ''
         },
         newKeep: {
           img: '',
           description: ''
-        }
+        },
+        vault: {}
       }
     },
     computed: {
       keeps() {
         return this.$store.state.keepsModule.userKeeps
+      },
+      vaults() {
+        return this.$store.state.vaultModule.vaults
       }
     },
     methods: {
       addTag() {
         var newTag = {
-          tag: this.tag.tag
+          tagName: this.tag.tagName
         }
         this.tags.push(newTag)
-        this.tag.tag = ''
+        this.tag.tagName = ''
       },
       createKeep() {
+        if(!this.vault.id) {
+          this.error("Please select a vault")
+        }
+        this.newKeep.vaultId = this.vault.id
+        this.newKeep.tags = this.tags
         this.$store.dispatch("createKeep", this.newKeep)
-        this.$store.dispatch("addTags", this.tags)
       },
       removeTag(i) {
         this.tags.splice(i, 1)
+      },
+      error(str) {
+        document.getElementById("error").innerText = str
+        setTimeout(() => {
+          document.getElementById("error").innerText = ""
+        }, 5000)
       }
     }
   }
