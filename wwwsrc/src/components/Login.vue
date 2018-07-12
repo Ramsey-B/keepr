@@ -3,6 +3,7 @@
     <div class="row justify-content-center">
     <div class="col-6 card">
     <div class="login" v-if="showLogin">
+      <h1>{{currentUser}}</h1>
       <h1>Login</h1>
       <form v-on:submit.prevent="login" class="form">
         <input class="input" type="email" name="email" placeholder=" e-mail" id="email" v-model="user.email">
@@ -40,14 +41,9 @@
 </template>
 
 <script>
+  import userModule from '../store/user'
   export default {
-    name: '',
-    // created() {
-    //   this.$store.dispatch('authenticate', true)
-    // },
-    mounted(){
-      this.$store.dispatch('authenticate')
-    },
+    name: 'Login',
     data() {
       return {
         user: {
@@ -63,9 +59,12 @@
         showLogin: true
       }
     },
+    mounted() {
+      this.$store.dispatch("authenticate")
+    },
     computed: {
       currentUser() {
-        return this.$store.state.user
+        return this.$store.state.userModule.name
       }
     },
     methods: {
