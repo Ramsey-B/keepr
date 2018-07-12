@@ -96,6 +96,17 @@ namespace keepr.Controllers
     }
 
     // [Authorize]
+    // [HttpDelete("{id}")]
+    // public string SignOut(string id)
+    // {
+    //   HttpContext.User.Identity.;
+    //   if(HttpContext.User.Identity.Name == "") {
+    //     return "Successfully Logged Out";
+    //    }
+    //    return "An Error Occurred!";
+    // }
+
+    // [Authorize]
     // [HttpGet("favorites/{id}")]
     // public IEnumerable<Post> GetFavs(string id) 
     // {

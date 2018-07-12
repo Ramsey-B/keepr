@@ -5,7 +5,7 @@
         <router-link :to="{ name: 'Home'}" class="navbar-brand">
           <a>Home</a>
         </router-link>
-        <router-link :to="{ name: 'Vaults'}" class="navbar-brand">
+        <router-link :to="{ name: 'Dashboard'}" class="navbar-brand">
           <a>Vaults</a>
         </router-link>
       </a>
@@ -41,12 +41,5 @@
 </script>
 
 <style>
-  #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-  }
+  
 </style>

@@ -28,12 +28,6 @@ namespace keepr.Controllers
       return null;
     }
 
-    [HttpGet]
-    public IEnumerable<Vault> GetAll()
-    {
-      return _db.GetAll();
-    }
-
     [HttpGet("{id}")]
     public Vault GetById(int id)
     {
@@ -44,7 +38,10 @@ namespace keepr.Controllers
     [Authorize]
     public IEnumerable<Vault> GetByAuthorId(string id)
     {
-      return _db.GetByAuthorId(id);
+      if(id == HttpContext.User.Identity.Name) {
+        return _db.GetByAuthorId(id);
+      }
+      return null;
     }
 
     [HttpPut("{id}")]

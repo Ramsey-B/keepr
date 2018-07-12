@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
-import Vaults from '@/components/Vaults'
+import Dashboard from '@/components/Dashboard'
 
 Vue.use(Router)
 
@@ -19,9 +19,9 @@ export default new Router({
       component: Home
     },
     {
-      path: '/vaults',
-      name: 'Vaults',
-      component: Vaults
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard
     }
   ]
 })
