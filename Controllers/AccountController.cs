@@ -95,34 +95,12 @@ namespace keepr.Controllers
       return "How did you even get here?";
     }
 
-    // [Authorize]
-    // [HttpDelete("{id}")]
-    // public string SignOut(string id)
-    // {
-    //   HttpContext.User.Identity.;
-    //   if(HttpContext.User.Identity.Name == "") {
-    //     return "Successfully Logged Out";
-    //    }
-    //    return "An Error Occurred!";
-    // }
-
-    // [Authorize]
-    // [HttpGet("favorites/{id}")]
-    // public IEnumerable<Post> GetFavs(string id) 
-    // {
-    //   return _db.GetUserFavs(id);
-    // }
-
-    // [Authorize]
-    // [HttpPost("favorites/{id}")]
-    // public string AddFav(int id)
-    // {
-    //   bool result = _db.AddFav(id, HttpContext.User.Identity.Name);
-    //   if(result)
-    //   {
-    //     return "Added to Favorites!";
-    //   }
-    //   return "An Error Occurred! Try Again!";
-    // }
+    [Authorize]
+    [HttpDelete("{id}")]
+    public async Task<string> Logout()
+    {
+      await HttpContext.SignOutAsync();
+      return "succesfully logged out";
+    }
   }
 }

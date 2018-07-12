@@ -120,26 +120,5 @@ namespace keepr.Repositories
       }
       return "Umm nope!";
     }
-
-  //   internal IEnumerable<Post> GetUserFavs(string id)
-  //   {
-  //     return _db.Query<Post>(@"
-  //     SELECT * FROM userfavs uf
-  //     INNER JOIN posts p ON p.id = uf.postId 
-  //     WHERE (userId = @id)", new{id});
-  //   }
-
-  //   internal bool AddFav(int postId, string userId)
-  //   {
-  //     int id = _db.Execute(@"
-  //       INSERT INTO userfavs (postId, userId)
-  //       VALUES (@postId, @userId);
-  //     ", new {
-  //       postId,
-  //       userId
-  //     });
-
-  //     return id > 0;
-  //   }
   }
 }

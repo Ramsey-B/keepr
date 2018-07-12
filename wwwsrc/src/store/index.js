@@ -15,7 +15,7 @@ var server = axios.create({
 })
 
 export default new vuex.Store({
-  modules:{
+  modules: {
     userModule
   },
   state: {
@@ -45,7 +45,7 @@ export default new vuex.Store({
     register({ dispatch, commit }, payload) {
       server.post('/account/register', payload)
         .then(newUser => {
-          router.push({name: "Home"})
+          router.push({ name: "Home" })
           commit('setUser', newUser)
         })
         .catch(err => {
@@ -55,7 +55,7 @@ export default new vuex.Store({
     login({ dispatch, commit }, user) {
       server.post('/account/login', user)
         .then(newUser => {
-          router.push({name: "Home"})
+          router.push({ name: "Home" })
           commit("setUser", newUser)
         })
         .catch(err => {
@@ -66,23 +66,26 @@ export default new vuex.Store({
       server.get('/account/authenticate')
         .then(res => {
           commit('setUser', res.data)
-          router.push({name: "Home"})
+          if (res.data.id) {
+            router.push({ name: "Home" })
+          } else {
+            router.push({ name: "Login" })
+          }
         })
         .catch(res => {
-          router.push({name: "Login"})
           console.log(res)
         })
     },
-    signOut({ commit, dispatch, state }){
+    signOut({ commit, dispatch, state }) {
       server.delete('account/' + state.user.id)
         .then(res => {
-          debugger
+          commit("setUser", {})
         })
         .catch(err => {
           console.log(err)
         })
     },
-    getVaults({ commit, dispatch, state}) {
+    getVaults({ commit, dispatch, state }) {
       server.get('/vault/user/' + state.user.id)
         .then(res => {
           commit("setVaults", res.data)
@@ -110,13 +113,16 @@ export default new vuex.Store({
         })
     },
     getUserKeeps({ commit, dispatch, state }) {
-      server.get('/keep/user/' +state.user.id)
+      server.get('/keep/user/' + state.user.id)
         .then(res => {
           commit("setUserKeeps", res.data)
         })
         .catch(err => {
           console.log(err)
         })
+    },
+    createKeep({ commit, dispatch }, keep) {
+
     }
   }
 })
