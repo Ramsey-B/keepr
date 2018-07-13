@@ -5,7 +5,7 @@
         <router-link :to="{ name: 'Home'}" class="navbar-brand">
           <a>Home</a>
         </router-link>
-        <router-link :to="{ name: 'Dashboard'}" class="navbar-brand">
+        <router-link v-if="user.id" :to="{ name: 'Dashboard'}" class="navbar-brand">
           <a>Vaults</a>
         </router-link>
       </a>

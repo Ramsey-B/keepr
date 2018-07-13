@@ -4,7 +4,7 @@
       <img class="card-img-top" :src="keep.img">
       <div class="buttons">
         <button v-if="viewable" class="btn btn-success" @click="selectKeep(keep)">view</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#keepModal">keep</button>
+        <button type="button" v-if="user.id" class="btn btn-primary" data-toggle="modal" data-target="#keepModal">keep</button>
         <button v-if="user.id == keep.authorId && !keep.public" class="btn btn-warning" @click="public(keep)">public</button>
         <button v-if="user.id == keep.authorId && keep.public" class="btn btn-warning" @click="public(keep)">private</button>
         <button v-if="activeVault.id" class="btn btn-danger" @click="deleteShare(keep)">Delete</button>
@@ -60,7 +60,9 @@
       }
     },
     mounted() {
-
+      if(!this.user.id) {
+        this.$store.dispatch("authenticate")
+      }
     },
     data() {
       return {
@@ -83,10 +85,12 @@
         if(!this.viewable) {
           this.$router.push({name: "Dashboard"})
         }
+        this.checkLogin()
         keep.vaultId = this.activeVault.id
         this.$store.dispatch("deleteShare", keep)
       },
       public(keep) {
+        this.checkLogin()
         keep.public = !keep.public
         this.$store.dispatch("editKeep", keep)
       },
@@ -94,11 +98,17 @@
         this.$store.dispatch("selectKeep", keep)
       },
       addShare() {
+        this.checkLogin()
         var share = {
           vaultId: this.vault.id,
           keepId: this.keep.id
         }
         this.$store.dispatch("addShare", share)
+      },
+      checkLogin() {
+        if(!this.user.id) {
+          this.$router.push({name: "Login"})
+        }
       }
     }
   }

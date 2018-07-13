@@ -38,11 +38,6 @@ export default {
       server.get('/account/authenticate')
         .then(res => {
           commit('setUser', res.data)
-          if (res.data.id) {
-            router.push({ name: "Home" })
-          } else {
-            router.push({ name: "Login" })
-          }
         })
         .catch(res => {
           console.log(res)

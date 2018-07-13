@@ -39,7 +39,7 @@
                 <option v-for="vault in vaults" :key="vault.id" :value="vault">{{vault.title}}</option>
               </select>
               <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-              <button class="btn btn-primary btn-primary" @click="createKeep" data-dismiss="modal">Submit</button>
+              <button v-if="vault.title" class="btn btn-primary btn-primary" @click="createKeep" data-dismiss="modal">Submit</button>
             </div>
           </div>
         </div>

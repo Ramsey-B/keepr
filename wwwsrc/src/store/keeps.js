@@ -52,6 +52,7 @@ export default {
     getVaultKeeps({ commit, dispatch }, id) {
       server.get('/keep/vault/' +id)
         .then(res => {
+          debugger
           commit("setUserKeeps", res.data)
         })
         .catch(err => {

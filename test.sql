@@ -17,7 +17,7 @@
 --   FOREIGN KEY (authorId)
 --     REFERENCES users(id)
 --     ON DELETE CASCADE
--- )
+-- );
 
 -- CREATE TABLE keeps (
 --   id int NOT NULL AUTO_INCREMENT,
@@ -54,7 +54,7 @@
 --   FOREIGN KEY (keepId)
 --     REFERENCES keeps(id)
 --     ON DELETE CASCADE
--- )
+-- );
 
 -- CREATE TABLE shares (
 --     id int NOT NULL AUTO_INCREMENT,
@@ -77,5 +77,5 @@
 --     FOREIGN KEY (keepId)
 --         REFERENCES keeps(id)
 --         ON DELETE CASCADE
--- )
+-- );
 

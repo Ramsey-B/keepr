@@ -21,9 +21,6 @@
     components: {
       keepsList
     },
-    mounted() {
-      this.$store.dispatch("getVaultKeeps", this.vault.id)
-    },
     data() {
       return {
 
@@ -34,7 +31,7 @@
         return this.$store.state.vaultModule.activeVault;
       },
       keeps() {
-        return this.$store.state.keepsModule.keeps;
+        return this.$store.state.keepsModule.userKeeps;
       }
     },
     methods: {}

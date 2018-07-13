@@ -45,8 +45,9 @@ export default {
           console.log(err)
         })
     },
-    selectVault({ commit, dispatch }, vault){
+    selectVault({ commit, dispatch, rootState }, vault){
       commit("setActiveVault", vault)
+      dispatch("getVaultKeeps", vault.id)
       router.push({ name: 'Vault', params: {id: vault.id}})
     }
   }
