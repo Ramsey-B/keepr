@@ -7,13 +7,16 @@
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#keepModal">keep</button>
         <button v-if="user.id == keep.authorId && !keep.public" class="btn btn-warning" @click="public(keep)">public</button>
         <button v-if="user.id == keep.authorId && keep.public" class="btn btn-warning" @click="public(keep)">private</button>
-        <button class="btn btn-danger" @click="deleteShare(keep)">Delete</button>
+        <button v-if="activeVault.id" class="btn btn-danger" @click="deleteShare(keep)">Delete</button>
       </div>
     </div>
     <h5 class="card-title">{{keep.description}}</h5>
     <p class="card-text">Author: {{keep.author}}</p>
     <p class="card-text">Views: {{keep.views}}</p>
     <p class="card-text">Keeps: {{keep.keeps}}</p>
+    <div v-for="(tag, i) in tags">
+      <span><p>{{tag.tag}}</p><p v-if="i < tags.length-1">,</p> </span>
+    </div>
     <div class="modal fade" id="keepModal" tabindex="-1" role="dialog" aria-labelledby="keepModalTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -51,6 +54,9 @@
       viewable: {
         type: Boolean,
         required: true
+      },
+      tags: {
+        type: Array
       }
     },
     mounted() {
@@ -67,6 +73,9 @@
       },
       vaults() {
         return this.$store.state.vaultModule.vaults
+      },
+      activeVault() {
+        return this.$store.state.vaultModule.activeVault
       }
     },
     methods: {
@@ -74,6 +83,7 @@
         if(!this.viewable) {
           this.$router.push({name: "Dashboard"})
         }
+        keep.vaultId = this.activeVault.id
         this.$store.dispatch("deleteShare", keep)
       },
       public(keep) {

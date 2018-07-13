@@ -102,10 +102,27 @@ namespace keepr.Controllers
       return "An Error Occurred! Try Again!";
     }
 
-    [HttpGet("tags/{name}")]
+    [HttpGet("tags/{keepId}")]
+    public IEnumerable<Tag> GetTags(int keepId) 
+    {
+      var check = _db.GetTags(keepId);
+      return check;
+    }
+
+    [HttpGet("query/{name}")]
     public IEnumerable<Keep> GetByTag(string name)
     {
       return _db.GetByTag(name);
+    }
+
+    [HttpPost("query")]
+    public IEnumerable<Keep> RelatedKeeps([FromBody]List<Tag> tags)
+    {
+      if(ModelState.IsValid)
+      {
+        return _db.RelatedKeeps(tags);
+      }
+      return null;
     }
 
     [HttpPost("add/{keepId}")]

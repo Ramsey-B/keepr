@@ -33,7 +33,6 @@ export default {
       var i = state.userKeeps.findIndex(keep => {
         return keep.id = id
       })
-      debugger
       state.userKeeps.splice(i, 1)
     },
     setKeep(state, keep) {
@@ -53,7 +52,7 @@ export default {
     getVaultKeeps({ commit, dispatch }, id) {
       server.get('/keep/vault/' +id)
         .then(res => {
-          commit("setKeeps", res.data)
+          commit("setUserKeeps", res.data)
         })
         .catch(err => {
           console.log(err)
@@ -88,7 +87,6 @@ export default {
     deleteShare({ commit, dispatch }, share) {
       server.delete('/keep/share/' +share.vaultId+ '/' +share.id)
         .then(res => {
-          debugger
           commit("removeKeep", share.id)
         })
         .catch(err => {
@@ -121,6 +119,31 @@ export default {
         })
         .catch(err => {
           console.log(err)
+        })
+    },
+    getTags({ commit, dispatch }, keepId) {
+      server.get('/keep/tags/' +keepId)
+        .then(res => {
+          commit("setTags", res.data)
+          dispatch("getRelated", res.data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    search({dispatch, commit}, query) {
+      server.get('/keep/query/' +query)
+        .then(res => {
+          commit("setKeeps", res.data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getRelated({dispatch, commit}, tags) {
+      server.post('/keep/query', tags)
+        .then(res => {
+          commit("setKeeps", res.data)
         })
     }
   }

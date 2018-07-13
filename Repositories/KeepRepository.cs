@@ -113,7 +113,7 @@ namespace keepr.Repository
         try
         {
           int num = _db.Execute(@"
-                INSERT INTO tags (tag, authorId, keepId)
+                INSERT INTO tags (tagName, authorId, keepId)
                 VALUES (@TagName, @AuthorId, @KeepId);
             ", tags);
           if (num > 0)
@@ -140,15 +140,34 @@ namespace keepr.Repository
       return i > 0;
     }
 
+    public IEnumerable<Tag> GetTags(int id)
+    {
+      return _db.Query<Tag>("SELECT * FROM tags WHERE keepId = @id", new { id });
+    }
+
     public IEnumerable<Keep> GetByTag(string tag)
     {
       var check = _db.Query<Keep>(@"
       SELECT * FROM tags
       INNER JOIN keeps ON keeps.id = tags.keepId 
-      WHERE (tag = @tag)
+      WHERE (tagName = @tag)
       AND keeps.public = true;
       ", new { tag });
       return check;
+    }
+
+    public IEnumerable<Keep> RelatedKeeps(List<Tag> tags)
+    {
+      List<string> query = new List<string>();
+      tags.ForEach(t => {
+        query.Add(t.TagName);
+      });
+      return _db.Query<Keep>(@"
+        SELECT * FROM tags
+        INNER JOIN keeps ON keeps.id = tags.keepId
+        WHERE tagName IN @query
+        AND keeps.public = true;
+      ", new { query });
     }
 
     public string ShareKeep(Share newKeep, int keepId)

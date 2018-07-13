@@ -42,7 +42,7 @@
 
 -- CREATE TABLE tags (
 --   id int NOT NULL AUTO_INCREMENT,
---   tag VARCHAR(20) NOT NULL,
+--   tagName VARCHAR(20) NOT NULL,
 --   authorId VARCHAR(255) NOT NULL,
 --   keepId int NOT NULL,
 --   PRIMARY KEY (id),
