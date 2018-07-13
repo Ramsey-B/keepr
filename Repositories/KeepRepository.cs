@@ -170,7 +170,7 @@ namespace keepr.Repository
       return "Failed To Add!";
     }
 
-    public bool DeleteShare(string authorId, int keepId)
+    public bool DeleteShare(int keepId, string authorId)
     {
       var num = _db.Execute(@"
                 UPDATE keeps SET
@@ -180,7 +180,7 @@ namespace keepr.Repository
       if (num > 0)
       {
         var i = _db.Execute(@"
-      DELETE FROM tags
+      DELETE FROM shares
       WHERE keepId = @keepId
       AND authorId = @authorId
       LIMIT 1;

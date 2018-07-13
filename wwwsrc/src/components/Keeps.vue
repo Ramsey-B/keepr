@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="container-fluid">
     <div>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
         Create Keep
@@ -45,17 +45,18 @@
         </div>
       </div>
     </div>
-    <div class="keeps">
-      <div v-for="keep in keeps">
-        <h4>{{keep.description}}</h4>
-      </div>
-    </div>
+    <keeps-list :name="'keeps'"></keeps-list>
   </div>
 </template>
 
 <script>
+  import keepsList from './KeepsList.vue'
+
   export default {
     name: 'Keeps',
+    components: {
+      keepsList
+    },
     mounted() {
       this.$store.dispatch("getUserKeeps")
     },
@@ -73,9 +74,6 @@
       }
     },
     computed: {
-      keeps() {
-        return this.$store.state.keepsModule.userKeeps
-      },
       vaults() {
         return this.$store.state.vaultModule.vaults
       }
@@ -89,7 +87,7 @@
         this.tag.tagName = ''
       },
       createKeep() {
-        if(!this.vault.id) {
+        if (!this.vault.id) {
           this.error("Please select a vault")
         }
         this.newKeep.vaultId = this.vault.id

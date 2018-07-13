@@ -90,7 +90,7 @@ namespace keepr.Controllers
       return null;
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("tag/{id}")]
     [Authorize]
     public string RemoveTag(int id)
     {
@@ -116,7 +116,7 @@ namespace keepr.Controllers
       return _db.ShareKeep(newKeep, keepId);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("share/{id}")]
     [Authorize]
     public string DeleteShare(int id)
     {

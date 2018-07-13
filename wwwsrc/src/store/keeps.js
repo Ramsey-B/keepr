@@ -28,6 +28,13 @@ export default {
     },
     setTags(state, tags) {
       state.tags = tags
+    },
+    removeKeep(state, id) {
+      var i = state.userKeeps.findIndex(keep => {
+        return keep.id = id
+      })
+
+      state.userKeeps.splice(i, 1)
     }
   },
   actions: {
@@ -41,7 +48,7 @@ export default {
         })
     },
     getVaultKeeps({ commit, dispatch }, id) {
-      server.get('vault/' +id)
+      server.get('/keep/vault/' +id)
         .then(res => {
           commit("setKeeps", res.data)
         })
@@ -67,6 +74,21 @@ export default {
             .then(res => {
               commit("setTags", res.data)
             })
+            .catch(err => {
+              console.log(err)
+            })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    deleteShare({ commit, dispatch }, keepId) {
+      server.delete('/keep/share/' +keepId)
+        .then(res => {
+          commit("removeKeep", keepId)
+        })
+        .catch(err => {
+          console.log(err)
         })
     }
   }
