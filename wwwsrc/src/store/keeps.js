@@ -2,7 +2,7 @@ import axios from 'axios'
 import router from '../router'
 import userModule from './user';
 var production = !window.location.host.includes('localhost');
-var baseUrl = production ? '//i-de-trippin.herokuapp.com/' : '//localhost:5000/api';
+var baseUrl = production ? '//ramsey-keepr.herokuapp.com/' : '//localhost:5000/api';
 
 var server = axios.create({
   baseURL: baseUrl,
