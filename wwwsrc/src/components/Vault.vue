@@ -5,7 +5,11 @@
         <h2>{{vault.title}}</h2>
       </div>
     </div>
-    <keeps-list :name="'vault'"></keeps-list>
+    <div class="keeps row">
+      <div v-for="keep in keeps" class="col-4">
+        <keeps-list :keep="keep" :viewable="true"></keeps-list>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -33,8 +33,10 @@ export default {
       var i = state.userKeeps.findIndex(keep => {
         return keep.id = id
       })
-
       state.userKeeps.splice(i, 1)
+    },
+    setKeep(state, keep) {
+      state.keep = keep
     }
   },
   actions: {
@@ -82,10 +84,32 @@ export default {
           console.log(err)
         })
     },
-    deleteShare({ commit, dispatch }, keepId) {
-      server.delete('/keep/share/' +keepId)
+    deleteShare({ commit, dispatch }, share) {
+      server.delete('/keep/share/' +share.vaultId+ '/' +share.id)
         .then(res => {
-          commit("removeKeep", keepId)
+          commit("removeKeep", share.keepId)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    EditKeep({ commit, dispatch }, keep) {
+      server.put('/keep/' +keep.id, keep)
+        .then(res => {
+          debugger
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    selectKeep({ commit, dispatch }, keep) {
+      commit("setKeep", keep)
+      router.push({name: "Keep", params: {keepId: keep.id}})
+    },
+    addShare({ commit, dispatch }, share) {
+      server.post("/keep/add/" +share.keepId, share)
+        .then(res => {
+          console.log(res.data)
         })
         .catch(err => {
           console.log(err)

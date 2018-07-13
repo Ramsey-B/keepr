@@ -116,12 +116,12 @@ namespace keepr.Controllers
       return _db.ShareKeep(newKeep, keepId);
     }
 
-    [HttpDelete("share/{id}")]
+    [HttpDelete("share/{vaultId}/{keepId}")]
     [Authorize]
-    public string DeleteShare(int id)
+    public string DeleteShare(int vaultId, int keepId)
     {
       var user = HttpContext.User.Identity.Name;
-      bool result = _db.DeleteKeep(id, user);
+      bool result = _db.DeleteShare(vaultId, keepId, user);
       if (result)
       {
         return "Successfully Removed!";

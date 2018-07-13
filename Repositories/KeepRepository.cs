@@ -37,7 +37,7 @@ namespace keepr.Repository
     {
       return _db.Query<Keep>(@"SELECT * FROM shares
               INNER JOIN keeps ON keeps.id = shares.keepId 
-              WHERE (keeps.authorId = @id);
+              WHERE shares.authorId = @id;
               ", new { id });
     }
 
@@ -45,7 +45,7 @@ namespace keepr.Repository
     {
       return _db.Query<Keep>(@"SELECT * FROM shares
               INNER JOIN keeps ON keeps.id = shares.keepId 
-              WHERE (keeps.vaultId = @id);
+              WHERE shares.vaultId = @id;
               ", new { id });
     }
 
@@ -170,21 +170,22 @@ namespace keepr.Repository
       return "Failed To Add!";
     }
 
-    public bool DeleteShare(int keepId, string authorId)
+    public bool DeleteShare(int vaultId, int keepId, string authorId)
     {
       var num = _db.Execute(@"
                 UPDATE keeps SET
                     keeps = keeps - 1
                 WHERE id = @keepId;
-            ", keepId);
+            ", new {keepId});
       if (num > 0)
       {
         var i = _db.Execute(@"
       DELETE FROM shares
       WHERE keepId = @keepId
       AND authorId = @authorId
+      AND vaultId = @vaultId
       LIMIT 1;
-      ", new { keepId, authorId});
+      ", new {vaultId, keepId, authorId});
         return i > 0;
       }
       return false;

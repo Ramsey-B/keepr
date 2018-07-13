@@ -1,12 +1,12 @@
 <template>
   <div class="container-fluid">
     <div>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createKeepModal">
         Create Keep
       </button>
 
       <!-- Modal -->
-      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal fade" id="createKeepModal" tabindex="-1" role="dialog" aria-labelledby="createKeepModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -45,7 +45,11 @@
         </div>
       </div>
     </div>
-    <keeps-list :name="'keeps'"></keeps-list>
+    <div class="keeps row">
+      <div v-for="keep in keeps" class="col-4">
+        <keeps-list :keep="keep" :viewable="true"></keeps-list>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -74,6 +78,9 @@
       }
     },
     computed: {
+      keeps() {
+        return this.$store.state.keepsModule.userKeeps
+      },
       vaults() {
         return this.$store.state.vaultModule.vaults
       }
