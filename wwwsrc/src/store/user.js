@@ -16,9 +16,9 @@ export default {
   actions: {
     register({ dispatch, commit }, payload) {
       server.post('/account/register', payload)
-        .then(newUser => {
+        .then(res => {
           router.push({ name: "Home" })
-          commit('setUser', newUser)
+          commit('setUser', res.data)
         })
         .catch(err => {
           console.log(err)
@@ -26,9 +26,9 @@ export default {
     },
     login({ dispatch, commit }, user) {
       server.post('/account/login', user)
-        .then(newUser => {
+        .then(res => {
           router.push({ name: "Home" })
-          commit("setUser", newUser)
+          commit("setUser", res.data)
         })
         .catch(err => {
           console.log(err)

@@ -24,6 +24,12 @@ export default {
     },
     setActiveVault(state, vault) {
       state.activeVault = vault
+    },
+    removeVault(state, vault) {
+      var i = state.vaults.findIndex(v => {
+        return v.id == vault.id
+      })
+      state.vaults.splice(i, 1)
     }
   },
   actions: {
@@ -49,6 +55,15 @@ export default {
       commit("setActiveVault", vault)
       dispatch("getVaultKeeps", vault.id)
       router.push({ name: 'Vault', params: {id: vault.id}})
+    },
+    deleteVault({ commit, dispatch }, vault) {
+      server.delete('/vault/' +vault.id)
+        .then(res => {
+          commit("removeVault", res.data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }

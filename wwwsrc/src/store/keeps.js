@@ -14,7 +14,8 @@ export default {
   state: {
     keeps: [],
     userKeeps: [],
-    tags: []
+    tags: [],
+    activeKeep: {}
   },
   mutations: {
     setKeeps(state, keeps) {
@@ -37,6 +38,9 @@ export default {
     },
     setKeep(state, keep) {
       state.keep = keep
+    },
+    setActiveKeep(state, keep) {
+      state.activeKeep = keep
     }
   },
   actions: {
@@ -52,7 +56,6 @@ export default {
     getVaultKeeps({ commit, dispatch }, id) {
       server.get('/keep/vault/' +id)
         .then(res => {
-          debugger
           commit("setUserKeeps", res.data)
         })
         .catch(err => {
@@ -115,7 +118,7 @@ export default {
     },
     addShare({ commit, dispatch }, share) {
       server.post("/keep/add/" +share.keepId, share)
-        .then(res => {
+        .then(res => { 
           console.log(res.data)
         })
         .catch(err => {
@@ -146,6 +149,9 @@ export default {
         .then(res => {
           commit("setKeeps", res.data)
         })
+    },
+    activeKeep({dispatch, commit}, keep) {
+      commit("setActiveKeep", keep)
     }
   }
 }

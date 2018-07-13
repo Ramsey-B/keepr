@@ -10,7 +10,7 @@
         <h2>Related Keeps</h2>
       </div>
       <div class="col-3" v-for="k in keeps">
-        <keeps-list :keep="k" :viewable="true"></keeps-list>
+        <keeps-list v-if="k.id != keep.id" :keep="k" :viewable="true"></keeps-list>
       </div>
     </div>
   </div>

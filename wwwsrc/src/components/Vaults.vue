@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="container-fluid">
     <div>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
         Create Vault
@@ -28,11 +28,16 @@
         </div>
       </div>
     </div>
-    <div class="vaults">
-      <div v-for="vault in vaults">
-        <a @click="selectVault(vault)">
-          <h2>{{vault.title}}</h2>
-        </a>
+    <div class="vaults row">
+      <div class="col-4" v-for="vault in vaults">
+        <div class="card text-center">
+          <a @click="selectVault(vault)">
+            <h2 class="card-title">{{vault.title}}</h2>
+          </a>
+          <div>
+            <button class="btn btn-danger" @click="deleteVault(vault)">Delete</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -62,6 +67,9 @@
       },
       selectVault(vault) {
         this.$store.dispatch("selectVault", vault)
+      },
+      deleteVault(vault) {
+        this.$store.dispatch("deleteVault", vault)
       }
     }
   }
