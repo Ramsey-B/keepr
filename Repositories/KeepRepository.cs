@@ -172,13 +172,6 @@ namespace keepr.Repository
 
     public bool DeleteShare(int vaultId, int keepId, string authorId)
     {
-      var num = _db.Execute(@"
-                UPDATE keeps SET
-                    keeps = keeps - 1
-                WHERE id = @keepId;
-            ", new {keepId});
-      if (num > 0)
-      {
         var i = _db.Execute(@"
       DELETE FROM shares
       WHERE keepId = @keepId
@@ -186,7 +179,14 @@ namespace keepr.Repository
       AND vaultId = @vaultId
       LIMIT 1;
       ", new {vaultId, keepId, authorId});
-        return i > 0;
+        ;
+      if(i > 0) {
+        var num = _db.Execute(@"
+                UPDATE keeps SET
+                    keeps = keeps - 1
+                WHERE id = @keepId;
+            ", new {keepId});
+        return num > 0;
       }
       return false;
     }
