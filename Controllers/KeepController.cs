@@ -118,6 +118,9 @@ namespace keepr.Controllers
     [HttpPost("query")]
     public IEnumerable<Keep> RelatedKeeps([FromBody]List<Tag> tags)
     {
+      if(tags.Count < 1) {
+        return null;
+      }
       if(ModelState.IsValid)
       {
         return _db.RelatedKeeps(tags);

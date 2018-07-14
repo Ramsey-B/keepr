@@ -7,7 +7,7 @@
         <button type="button" v-if="user.id" class="btn btn-primary" data-toggle="modal" data-target="#keepModal" @click="activeKeep(keep)">keep</button>
         <button v-if="user.id == keep.authorId && !keep.public" class="btn btn-warning" @click="public(keep)">public</button>
         <button v-if="user.id == keep.authorId && keep.public" class="btn btn-warning" @click="public(keep)">private</button>
-        <button v-if="activeVault.id" class="btn btn-danger" @click="deleteShare(keep)">Delete</button>
+        <button v-if="activeVault.id && deletable" class="btn btn-danger" @click="deleteShare(keep)">Delete</button>
       </div>
     </div>
     <h5 class="card-title">{{keep.description}}</h5>
@@ -62,6 +62,10 @@
       },
       tags: {
         type: Array
+      },
+      deletable: {
+        type: Boolean,
+        default: true
       }
     },
     mounted() {
@@ -108,6 +112,7 @@
       },
       addShare(keep) {
         this.checkLogin()
+        this.currentKeep.keeps++
         var share = {
           vaultId: this.vault.id,
           keepId: this.currentKeep.id

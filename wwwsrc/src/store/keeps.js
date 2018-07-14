@@ -32,11 +32,17 @@ export default {
     },
     removeKeep(state, id) {
       var i = state.userKeeps.findIndex(keep => {
-        return keep.id = id
+        return keep.id == id
       })
       state.userKeeps.splice(i, 1)
     },
     setKeep(state, keep) {
+      var i = state.userKeeps.findIndex(k => {
+        return keep.id == k.id
+      })
+      if (i > -1) {
+        state.userKeeps.splice(i, 1, keep)
+      }
       state.keep = keep
     },
     setActiveKeep(state, keep) {
@@ -54,7 +60,7 @@ export default {
         })
     },
     getVaultKeeps({ commit, dispatch }, id) {
-      server.get('/keep/vault/' +id)
+      server.get('/keep/vault/' + id)
         .then(res => {
           commit("setUserKeeps", res.data)
         })
@@ -71,12 +77,12 @@ export default {
           console.log(err)
         })
     },
-    createKeep({ commit, dispatch, rootState}, keep) {
+    createKeep({ commit, dispatch, rootState }, keep) {
       keep.author = rootState.userModule.user.username
-      server.post('/keep/' +keep.vaultId, keep)
+      server.post('/keep/' + keep.vaultId, keep)
         .then(res => {
           commit("setNewKeep", res.data)
-          server.post('/keep/tag/' +res.data.id, keep.tags)
+          server.post('/keep/tag/' + res.data.id, keep.tags)
             .then(res => {
               commit("setTags", res.data)
             })
@@ -89,7 +95,7 @@ export default {
         })
     },
     deleteShare({ commit, dispatch }, share) {
-      server.delete('/keep/share/' +share.vaultId+ '/' +share.id)
+      server.delete('/keep/share/' + share.vaultId + '/' + share.id)
         .then(res => {
           commit("removeKeep", share.id)
         })
@@ -98,7 +104,7 @@ export default {
         })
     },
     editKeep({ commit, dispatch }, keep) {
-      server.put('/keep/' +keep.id, keep)
+      server.put('/keep/' + keep.id, keep)
         .then(res => {
           commit("setKeep", res.data)
         })
@@ -107,18 +113,18 @@ export default {
         })
     },
     selectKeep({ commit, dispatch }, keep) {
-      server.get('/keep/' +keep.id)
+      server.get('/keep/' + keep.id)
         .then(res => {
           commit("setKeep", res.data)
-          router.push({name: "Keep", params: {keepId: res.data.id}})
+          router.push({ name: "Keep", params: { keepId: res.data.id } })
         })
         .catch(err => {
           console.log(err)
         })
     },
     addShare({ commit, dispatch }, share) {
-      server.post("/keep/add/" +share.keepId, share)
-        .then(res => { 
+      server.post("/keep/add/" + share.keepId, share)
+        .then(res => {
           console.log(res.data)
         })
         .catch(err => {
@@ -126,7 +132,7 @@ export default {
         })
     },
     getTags({ commit, dispatch }, keepId) {
-      server.get('/keep/tags/' +keepId)
+      server.get('/keep/tags/' + keepId)
         .then(res => {
           commit("setTags", res.data)
           dispatch("getRelated", res.data)
@@ -135,8 +141,8 @@ export default {
           console.log(err)
         })
     },
-    search({dispatch, commit}, query) {
-      server.get('/keep/query/' +query)
+    search({ dispatch, commit }, query) {
+      server.get('/keep/query/' + query)
         .then(res => {
           commit("setKeeps", res.data)
         })
@@ -144,13 +150,18 @@ export default {
           console.log(err)
         })
     },
-    getRelated({dispatch, commit}, tags) {
-      server.post('/keep/query', tags)
-        .then(res => {
-          commit("setKeeps", res.data)
-        })
+    getRelated({ dispatch, commit }, tags) {
+      if (tags.length < 1) {
+        server.post('/keep/query', tags)
+          .then(res => {
+            commit("setKeeps", res.data)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     },
-    activeKeep({dispatch, commit}, keep) {
+    activeKeep({ dispatch, commit }, keep) {
       commit("setActiveKeep", keep)
     }
   }
