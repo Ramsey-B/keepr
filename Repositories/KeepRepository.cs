@@ -107,7 +107,6 @@ namespace keepr.Repository
         tags.ForEach(tag =>
         {
           tag.KeepId = keep.Id;
-          tag.TagName = tag.TagName.Replace(' ', '+');
           tag.AuthorId = userId;
         });
         try
@@ -150,7 +149,7 @@ namespace keepr.Repository
       var check = _db.Query<Keep>(@"
       SELECT * FROM tags
       INNER JOIN keeps ON keeps.id = tags.keepId 
-      WHERE (tagName = @tag)
+      WHERE tagName LIKE CONCAT('%',@tag,'%')
       AND keeps.public = true;
       ", new { tag });
       return check;
@@ -165,7 +164,7 @@ namespace keepr.Repository
       return _db.Query<Keep>(@"
         SELECT * FROM tags
         INNER JOIN keeps ON keeps.id = tags.keepId
-        WHERE tagName IN @query
+        WHERE tagName LIKE CONCAT('%',@tag,'%')
         AND keeps.public = true;
       ", new { query });
     }

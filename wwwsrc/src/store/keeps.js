@@ -82,9 +82,10 @@ export default {
       server.post('/keep/' + keep.vaultId, keep)
         .then(res => {
           commit("setNewKeep", res.data)
+          debugger
           server.post('/keep/tag/' + res.data.id, keep.tags)
-            .then(res => {
-              commit("setTags", res.data)
+            .then(tags => {
+              commit("setTags", tags.data)
             })
             .catch(err => {
               console.log(err)
